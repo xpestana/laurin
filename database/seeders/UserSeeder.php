@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
                     'updated_at' => Carbon::now(),
                 ]
             );
-
+            $userDriver->assignRole('Driver');
             $userDriverProfile = $userDriver->profile()->updateOrCreate([
                 'firstname'  => 'Usuario',
                 'lastname'   => 'Driver',

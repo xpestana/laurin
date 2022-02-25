@@ -111,7 +111,7 @@
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
         {{ status }}
     </div>
-    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="submit" class="btn btn-primary">Sauvegarder</button>
 </div>
 <!--end col-->
 </div>
@@ -141,78 +141,78 @@
         },
         data() {
             return {
-            moment:null,
-             photoPreview: null,
-             user: this.$page.props.auth.user,
-             profile: this.$page.props.auth.profile,
-             form: this.$inertia.form({
-                _method: 'PUT',
-                email: this.$page.props.auth.user.email,
-                firstname: this.$page.props.auth.profile.firstname,
-                lastname: this.$page.props.auth.profile.lastname,
-                phone: this.$page.props.auth.profile.phone,
-                birthdate: this.$page.props.auth.profile.birthdate,
-                photo: null,
-            })
-         }
-     },
-     created(){
+                moment:null,
+                photoPreview: null,
+                user: this.$page.props.auth.user,
+                profile: this.$page.props.auth.profile,
+                form: this.$inertia.form({
+                    _method: 'PUT',
+                    email: this.$page.props.auth.user.email,
+                    firstname: this.$page.props.auth.profile.firstname,
+                    lastname: this.$page.props.auth.profile.lastname,
+                    phone: this.$page.props.auth.profile.phone,
+                    birthdate: this.$page.props.auth.profile.birthdate,
+                    photo: null,
+                })
+            }
+        },
+        created(){
             this.moment=Moment;
         },
-     methods: {
-        updateProfileInformation() {
-            if (this.$refs.photo) {
-                this.form.photo = this.$refs.photo.files[0]
-            }
+        methods: {
+            updateProfileInformation() {
+                if (this.$refs.photo) {
+                    this.form.photo = this.$refs.photo.files[0]
+                }
 
-            this.form.post(route('user-profile-information.update'), {
-                errorBag: 'updateProfileInformation',
-                preserveScroll: true,
-                onSuccess: () => {
-                    this.$toast.show("enregistré avec succès", {
-                        type: "success",
-                        position : "top-right",
-                        pauseOnHover: "true",
-                    });
-                    this.clearPhotoFileInput();
-                    location.reload();
-                },
-            });
+                this.form.post(route('user-profile-information.update'), {
+                    errorBag: 'updateProfileInformation',
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        this.$toast.show("enregistré avec succès", {
+                            type: "success",
+                            position : "top-right",
+                            pauseOnHover: "true",
+                        });
+                        this.clearPhotoFileInput();
+                        location.reload();
+                    },
+                });
+            },
+
+            selectNewPhoto() {
+                this.$refs.photo.click();
+            },
+
+            updatePhotoPreview() {
+                const photo = this.$refs.photo.files[0];
+
+                if (! photo) return;
+
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    this.photoPreview = e.target.result;
+                };
+
+                reader.readAsDataURL(photo);
+            },
+
+            deletePhoto() {
+                this.$inertia.delete(route('current-user-photo.destroy'), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        this.photoPreview = null;
+                        this.clearPhotoFileInput();
+                    },
+                });
+            },
+
+            clearPhotoFileInput() {
+                if (this.$refs.photo?.value) {
+                    this.$refs.photo.value = null;
+                }
+            },
         },
-
-        selectNewPhoto() {
-            this.$refs.photo.click();
-        },
-
-        updatePhotoPreview() {
-            const photo = this.$refs.photo.files[0];
-
-            if (! photo) return;
-
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                this.photoPreview = e.target.result;
-            };
-
-            reader.readAsDataURL(photo);
-        },
-
-        deletePhoto() {
-            this.$inertia.delete(route('current-user-photo.destroy'), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    this.photoPreview = null;
-                    this.clearPhotoFileInput();
-                },
-            });
-        },
-
-        clearPhotoFileInput() {
-            if (this.$refs.photo?.value) {
-                this.$refs.photo.value = null;
-            }
-        },
-    },
-}
+    }
 </script>
