@@ -54,7 +54,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a href="pages/widgets.html" class="nav-link">
+      <a href="{{ route('history.invoices') }}" class="nav-link">
         <i class="nav-icon far fa-clock"></i>
         <p>
           Historique des achats

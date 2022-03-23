@@ -1,5 +1,16 @@
 @extends('Layouts.App')
 @section('content')
+<style>
+	.listAddress{
+		background-color: #fff;
+		border: 1px solid #ccc;
+		width: 100%;
+	}
+	.list{
+		cursor: pointer;
+		border-bottom: 1px solid #ccc;
+	}
+</style>
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<div class="content-header">
@@ -9,11 +20,13 @@
 					<h3 class="card-title">Sélectionnez le service et l'entreprise</h3>
 				</div>
 				<div class="card-body">
+					<form id="form-services" class="form-services needs-validation" method="POST" action="{{ route('store.invoices') }}" enctype="multipart/form-data">
 					<section id="firstStep">
 						@include('Components/First')
 					</section>
 					<section id="secondStep">
-						<form class="form-services">
+						
+							@csrf
 							<div class="row">
 								<div class="col-md-12 mb-4">
 									<div id="map"></div>
@@ -31,8 +44,9 @@
 									<div class="form-group">
 										<label>Situation actuelle</label>
 										<div class="input-group date" id="dateTime">
-											<input type="text" name="actual" class="form-control">
+											<input type="text" id="searchAddress" name='searchAddress' class="form-control"  required="">
 										</div>
+										<div class="listAddress p-4"></div>
 									</div>
 								</div>
 								<div class="w-100"></div>
@@ -43,10 +57,113 @@
 									</div>
 								</div>
 							</div>
-						</form>
-						<script>
+						</section>
+						<section id="thirdStep">
+							@include('Components/Third')
+						</section>
+						<section id="fourStep">
+							<div class="row">
+								<div class="col-md-12 ml-auto mt-3">
+									<ul>
+										<li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Base :</strong> <span id="base_end"></span></li>
+										<li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Destination :</strong> <span id="destination_end"></span></li>
+										<li><strong><i class=" mb-3 fas fa-wrench mr-2"></i> Service :</strong> <span id="service_end"></span></li>
+										<li><strong><i class=" mb-3 fas fa-user mr-2"></i> Nom :</strong> <span id="name_end"></span></li>
+										<li><strong><i class=" mb-3 fas fa-phone mr-2"></i> Téléphone :</strong> <span id="phone_end"></span></li>
+										<li><strong><i class=" mb-3 fas fa-envelope mr-2"></i> Courriel électronique :</strong> <span id="mail_end"></span></li>
+									</ul>
+								</div>
+								<div class="col-md-4">
+									<img class="mt-4 img-fluid" id="imagenPrevisualizacion">
+								</div>
+								<div class="w-100"></div>
+								<div align="right" class="col-md-3 ml-auto mt-3">
+									<div class="btn-group w-100">
+										<button type="button" class="btn btn-block btn-outline-primary btn-flat m-0" onclick="FourPrev()">Revenir</button>
+										<button type="submit" class="btn btn-block btn-outline-success btn-flat m-0">Créer facture</button>
+									</div>
+								</div>
+								<div align="center" class="col-12 mt-4">
+									<p>
+										<strong>Remarque:</strong> Les données doivent être complètes pour que le formulaire fonctionne
+									</p>
+								</div>
+							</div>
+						</section>
+						<input type="hidden" id="lat_input" name="lat">
+						<input type="hidden" id="lng_input" name="lng">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+	function getGeocodeData(address) { 
+		address = encodeURIComponent(address);  
+		googleMapUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="+ address +"&key=AIzaSyDsK-qVLYQGl_YSAHFQAmwxCqpCt-C0CZc";   
+		$.ajax({
+			type : "GET",
+			url : googleMapUrl,
+			success : function(geocodeResponseData){
+				console.log(geocodeResponseData.results);
+				if(geocodeResponseData.results.length > 0){
+					$('.listAddress').show();
+					geocodeResponseData.results.forEach( function(valor, indice, array) {
+						$('.listAddress').append('<div class="list py-1" onclick="geometry('+valor.geometry.location.lat +','+valor.geometry.location.lng +','+"'"+valor.formatted_address+"'"+')">'+valor.formatted_address+'</div>')
+    				console.log(valor.geometry.location);
+					});
+				}else{
+					$('.listAddress').hide();
+				}
+			}
+		});
+    	//geocodeResponseData = file_get_contents(googleMapUrl);
+    	//$responseData = json_decode($geocodeResponseData, true);console.log($responseData);
+    /*	if($responseData['status']=='OK') {
+    		$latitude = isset($responseData['results'][0]['geometry']['location']['lat']) ? $responseData['results'][0]['geometry']['location']['lat'] : "";
+    		$longitude = isset($responseData['results'][0]['geometry']['location']['lng']) ? $responseData['results'][0]['geometry']['location']['lng'] : "";
+    		$formattedAddress = isset($responseData['results'][0]['formatted_address']) ? $responseData['results'][0]['formatted_address'] : "";         
+    		if($latitude && $longitude && $formattedAddress) {         
+    			$geocodeData = array();                         
+    			array_push(
+    				$geocodeData, 
+    				$latitude, 
+    				$longitude, 
+    				$formattedAddress
+    				);            
+    			return $geocodeData;             
+    		} else {
+    			return false;
+    		}         
+    	} else {
+    		echo "ERROR: {$responseData['status']}";
+    		return false;
+    	}*/
+    }
+
       // Initialize and add the map
       function initMap() {
+
         // The location of Uluru
         const uluru = { lat: 45.6561685248608, lng: -72.75923067667834 };
         const marker1 = { lat: 45.6561685248608, lng: -72.75923067667834 }; 
@@ -69,60 +186,114 @@
 
         marker_1.addListener("click", () => {
         	$('select[name=enterprise_own]').val(1);
-    		map.setZoom(13);
-    		map.setCenter(marker_1.getPosition());
-  		});
+        	map.setZoom(13);
+        	map.setCenter(marker_1.getPosition());
+        });
 
-  		marker_2.addListener("click", () => {
-  			$('select[name=enterprise_own]').val(2);
-    		map.setZoom(13);
-    		map.setCenter(marker_2.getPosition());
-  		});
-
-
-  		 $("select[name=enterprise_own]").change(function(){
-    	if($('select[name=enterprise_own]').val() == 1){
-    		map.setZoom(13);
-    		map.setCenter(marker_1.getPosition());
-    	}else{
-    		map.setZoom(13);
-    		map.setCenter(marker_2.getPosition());
-    	}
-    });
-    }
+        marker_2.addListener("click", () => {
+        	$('select[name=enterprise_own]').val(2);
+        	map.setZoom(13);
+        	map.setCenter(marker_2.getPosition());
+        });
 
 
-</script>
-</section>
-<section id="thirdStep">
-	@include('Components/Third')
-</section>
-</div>
-</div>
-</div>
-</div>
-</div>
-<script>
-	$('#secondStep').hide();
-	$('#thirdStep').hide();
+        $("select[name=enterprise_own]").change(function(){
+        	if($('select[name=enterprise_own]').val() == 1){
+        		map.setZoom(13);
+        		map.setCenter(marker_1.getPosition());
+        	}else{
+        		map.setZoom(13);
+        		map.setCenter(marker_2.getPosition());
+        	}
 
-	/**/
+        });
 
-	function OneNext() {
-		$('#firstStep').hide();
-		$('#secondStep').show();
-	}
-	function SecondNext() {
-		$('#secondStep').hide();
-		$('#thirdStep').show();
-	}
-	function SecondPrev() {
-		$('#firstStep').show();
-		$('#secondStep').hide();
-	}
-	function ThirdPrev() {
-		$('#secondStep').show();
-		$('#thirdStep').hide();
-	}
+        /*GEO*/
+        $( "#searchAddress" ).keyup(function() {
+        	var searchAddress = document.getElementById("searchAddress");
+        	$geocodeData = getGeocodeData(searchAddress.value); 
+        	if($geocodeData) {         
+        		$latitude = $geocodeData[0];
+        		$longitude = $geocodeData[1];
+        		$address = $geocodeData[2];
+        		console.log($geocodeData);
+        	}
+        });
+      };
+
+
+      $('#secondStep').hide();
+      $('#thirdStep').hide();
+      $('#fourStep').hide();
+      $('.listAddress').hide();
+
+      /**/
+
+      function OneNext() {
+      	$('#firstStep').hide();
+      	$('#secondStep').show();
+      }
+      function SecondNext() {
+      	$('#secondStep').hide();
+      	$('#thirdStep').show();
+      }
+      function SecondPrev() {
+      	$('#firstStep').show();
+      	$('#secondStep').hide();
+      }
+      function ThirdPrev() {
+      	$('#secondStep').show();
+      	$('#thirdStep').hide();
+      }
+      function ThirdNext(){
+      	$('#thirdStep').hide();
+      	$('#fourStep').show();
+
+      	coupler();
+      }
+      function FourPrev(){
+      	$('#fourStep').hide();
+      	$('#thirdStep').show();
+      }
+
+      function coupler(){
+      	var base = $('select[name="enterprise_own"] option:selected').text();
+      	var destination = $('#searchAddress').val();
+      	var services = $('select[name="service"] option:selected').text();
+      	var name = $('#name_client').val();
+      	var email = $('#email_client').val();
+      	var phone = $('#phone_client').val();
+
+      	$('#base_end').html(base);
+      	$('#destination_end').html(destination);
+      	$('#service_end').html(services);
+      	$('#name_end').html(name);
+      	$('#mail_end').html(email);
+      	$('#phone_end').html(phone);
+
+      	/*   Img   */
+      	const $seleccionArchivos = document.querySelector("#file_end"),
+      	$imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
+
+	  		// Los archivos seleccionados, pueden ser muchos o uno
+	  		const archivos = $seleccionArchivos.files;
+  			// Si no hay archivos salimos de la función y quitamos la imagen
+  			if (!archivos || !archivos.length) {
+  			$imagenPrevisualizacion.src = "";
+  				return;
+  			}
+  			// Ahora tomamos el primer archivo, el cual vamos a previsualizar
+  			const primerArchivo = archivos[0];
+  			// Lo convertimos a un objeto de tipo objectURL
+  			const objectURL = URL.createObjectURL(primerArchivo);
+  			// Y a la fuente de la imagen le ponemos el objectURL
+  			$imagenPrevisualizacion.src = objectURL;
+		}
+		function geometry(lat,long,address) {
+			$('.listAddress').hide();
+			$('#searchAddress').val(address);
+			$('#lat_input').val(lat);
+			$('#lng_input').val(long);
+		}
 </script>
 @endsection

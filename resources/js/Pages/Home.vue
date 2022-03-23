@@ -25,7 +25,7 @@
                 </p>
                     </div>
                     <div align="center" class="col-md-3 text-md-left text-center">
-                        <a class="btn btn-block btn-outline-primary btn-flat">Créer facture</a>
+                        <a href="/factures" class="btn btn-block btn-outline-primary btn-flat">Créer facture</a>
                     </div>
                 </div>
             </div>

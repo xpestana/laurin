@@ -56,12 +56,12 @@
       </a>
     </li>
     <li class="nav-item">
-      <a href="pages/widgets.html" class="nav-link">
+      <Link :href="route('history.invoices')" class="nav-link">
         <i class="nav-icon far fa-clock"></i>
         <p>
           Historique des achats
         </p>
-      </a>
+      </Link>
     </li>
     <li class="nav-item">
       <a href="javascript:void(0)" class="nav-link" @click.prevent="logout">

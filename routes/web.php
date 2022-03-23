@@ -28,6 +28,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     /*SERVICES*/
 
     Route::get('/factures', [InvoiceController::class, 'index'])->name('index.invoices');/*INVOICES*/
+    Route::post('/factures/store', [InvoiceController::class, 'store'])->name('store.invoices');/*INVOICES*/
+    Route::get('/factures/history', [InvoiceController::class, 'history'])->name('history.invoices');/*INVOICES*/
 });
 
 Route::middleware(['auth', 'verified', 'role:Admin'])->prefix('tablero')->group(function () {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
@@ -12,10 +12,8 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Styles -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsUPX2-Qv8frupJxAHwIsOiX354XW-FP4&callback=initMap&libraries=&v=weekly"
-      async
-    ></script>
+    
+
    <!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
    crossorigin=""/>
@@ -50,7 +48,10 @@
         <img class="animation__shake" src="/img/logo.jpeg" alt="Logo" height="100" width="250">
     </div>
 
-    
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsK-qVLYQGl_YSAHFQAmwxCqpCt-C0CZc&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
     <!-- jQuery UI 1.11.4 -->
     <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
