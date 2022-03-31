@@ -19,17 +19,17 @@ class CreateServicesTable extends Migration
             $table->boolean('annuled')->default(0);
             $table->boolean('goa')->default(0);
             $table->string('service')->nullable();
-            $table->string('enterprise')->nullable();
+            $table->string('enterprise');
             $table->dateTime('date_Time')->nullable();
             $table->integer('timeservices')->nullable();
-            $table->integer('base');
+            $table->integer('base')->nullable();
             $table->string('destination')->nullable();
             $table->string('destination_lat')->nullable();
             $table->string('destination_long')->nullable();
-            $table->string('name');
-            $table->string('phone');
+            $table->string('name')->nullable();
+            $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('file');
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

@@ -455,3 +455,7 @@ html.os-html,html.os-html>.os-host{display:block;overflow:hidden;box-sizing:bord
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+ul{
+	list-style: none !important;
+}

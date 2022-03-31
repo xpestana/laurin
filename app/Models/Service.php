@@ -31,7 +31,8 @@ class Service extends Model
         'file',
         'flair',
         'destination',
-        'essence'
+        'essence',
+        'km'
     ];
 
     public function user()

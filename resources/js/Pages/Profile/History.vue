@@ -10,83 +10,68 @@
             <div class="card-body">
                 <div class="card-body">
                 <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
-                <div id="accordion">
-                  <div class="card card-primary">
+                <div id="accordion" v-if="services.length != 0">
+                  <div v-for="service in services" :key="service.id" class="card card-primary">
                     <div class="card-header">
                       <h4 class="card-title w-100">
-                        <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
-                          Collapsible Group Item #1
+                        <a class="d-block w-100" data-toggle="collapse" :href="'#collapse'+service.id">
+                          Facture {{ service.id.toString().padStart (5,'0') }} 
+                          <template v-if="service.annuled == true">Service annulé</template>
+                          <template v-if="service.goa == true">Service GOA</template>
                         </a>
                       </h4>
                     </div>
-                    <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                    <div :id="'collapse'+service.id" class="collapse" data-parent="#accordion">
                       <div class="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
-                        3
-                        wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                        laborum
-                        eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                        nulla
-                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                        nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
-                        beer
-                        farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                        labore sustainable VHS.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card card-danger">
-                    <div class="card-header">
-                      <h4 class="card-title w-100">
-                        <a class="d-block w-100" data-toggle="collapse" href="#collapseTwo">
-                          Collapsible Group Danger
-                        </a>
-                      </h4>
-                    </div>
-                    <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                      <div class="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
-                        3
-                        wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                        laborum
-                        eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                        nulla
-                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                        nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
-                        beer
-                        farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                        labore sustainable VHS.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card card-success">
-                    <div class="card-header">
-                      <h4 class="card-title w-100">
-                        <a class="d-block w-100" data-toggle="collapse" href="#collapseThree">
-                          Collapsible Group Success
-                        </a>
-                      </h4>
-                    </div>
-                    <div id="collapseThree" class="collapse" data-parent="#accordion">
-                      <div class="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
-                        3
-                        wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                        laborum
-                        eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
-                        nulla
-                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                        nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
-                        beer
-                        farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                        labore sustainable VHS.
+                        <ul>
+                          <li><strong><i class=" mb-3 fas fa-wrench mr-2"></i> Enterprise :</strong> {{ service.enterprise }}</li>
+                      <template v-if="service.annuled == false && service.goa == false">
+                        <li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Base :</strong> 
+                          <template v-if="service.base == 1">
+                            1620 rang Saint Eduard, St-Liboire QC J0H 1R0
+                          </template>
+                          <template v-else>
+                            1200 Rue Daniel - Johnson O, Saint-Hyacinthe, QC J2S 7K7
+                          </template>
+                        </li>
+                        <li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Destination:</strong> 
+                          {{ service.destination }}
+                        </li>
+                        <li><strong><i class="mb-3 fas fa-fire mr-2"></i> Flair:</strong> 
+                          {{ service.flair }}
+                        </li>
+                        <li><strong><i class="mb-3 fas fa-gas-pump mr-2"></i> Essence:</strong> 
+                          {{ service.essence }}
+                        </li>
+                        <li><strong><i class=" mb-3 fas fa-wrench mr-2"></i> Service :</strong> 
+                          <template v-if="service.service == 'T1'">CREVAISON</template>
+                          <template v-if="service.service == 'T3'">SURVOLTAGE</template>
+                          <template v-if="service.service == 'T4'">ESSENCE</template>
+                          <template v-if="service.service == 'T5'">ENLISSEMENT</template>
+                          <template v-if="service.service == 'T6'">REMORQUAGE</template>
+                          <template v-if="service.service == 'T7'">DÉVERROUILLAGE</template>
+                          <template v-if="service.service == 'T8'">ACCIDENT</template>
+                          <template v-if="service.service == 'SAISIE'">SAISIE</template>
+                          <template v-if="service.service == 'REMISAGE'">REMISAGE</template>
+                        </li>
+                        <li><strong><i class=" mb-3 fas fa-user mr-2"></i> Nom:</strong> {{ service.name }}</li>
+                        <li><strong><i class=" mb-3 fas fa-phone mr-2"></i> Téléphone:</strong> {{ service.phone }}</li>
+                        <li><strong><i class=" mb-3 fas fa-envelope mr-2"></i> Courriel électronique:</strong> {{ service.email }}</li>
+                        <li v-if="service.file" class="col-5 mt-4">
+                          <img style="width: 100%" :src="'/storage/img'+service.file">
+                        </li>
+                      </template>
+                      
+                    </ul>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div v-else>
+                  <h5>Rien à montrer</h5>
+                </div>
               </div>
               <!-- /.card-body -->
-                {{ services }}
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@
 			<div class="form-group">
 				<label>Nom:</label>
 				<div class="input-group date" id="name">
-					<input type="text" id="name_client" name="name" class="form-control" placeholder="Nom:" required="">
+					<input type="text" id="name_client" name="name" class="form-control" placeholder="Nom:">
 				</div>
 			</div>
 		</div>	
@@ -14,7 +14,7 @@
 			<div class="form-group">
 				<label>Téléphone:</label>
 				<div class="input-group date" id="phone">
-					<input type="text" id="phone_client" name="phone" class="form-control" placeholder="Téléphone:" required="">
+					<input type="text" id="phone_client" name="phone" class="form-control" placeholder="Téléphone:">
 				</div>
 			</div>
 		</div>	
@@ -22,7 +22,7 @@
 			<div class="form-group">
 				<label>Courriel électronique:</label>
 				<div class="input-group date" id="email">
-					<input type="text" id="email_client" name="email" class="form-control" placeholder="Courriel électronique:" required="">
+					<input type="text" id="email_client" name="email" class="form-control" placeholder="Courriel électronique:">
 				</div>
 			</div>
 		</div>	
@@ -30,7 +30,7 @@
 			<div class="form-group">
 				<label>Photo de l'événement:</label>
 				<div class="input-group date" id="email">
-					<input id="file_end" type="file" name="file" lang="fr" class="form-control" placeholder="Photo de l'événement:" accept="image/*" required="">
+					<input id="file_end" type="file" name="file" lang="fr" class="form-control" placeholder="Photo de l'événement:" accept="image/*">
 				</div>
 			</div>
 		</div>

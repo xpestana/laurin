@@ -1,13 +1,13 @@
 	<div class="row">
 		<div class="col-md-3 mb-4 goa">
 			<div class="custom-control custom-checkbox">
-				<input class="custom-control-input" type="checkbox" id="canceled" name="canceled" onchange="annulle()">
+				<input class="custom-control-input cancelled" type="checkbox" id="canceled" name="canceled" onchange="annulle()">
 				<label for="canceled" class="custom-control-label">Annulé?</label>
 			</div>		
 		</div>
 		<div class="col-md-3 mb-4 annulle">
 			<div class="custom-control custom-checkbox">
-				<input class="custom-control-input" type="checkbox" id="goa" name="goa" onchange="goals()">
+				<input class="custom-control-input goa" type="checkbox" id="goa" name="goa" onchange="goals()">
 				<label for="goa" class="custom-control-label">GOA</label>
 			</div>		
 		</div>
@@ -33,10 +33,10 @@
 				</select>
 			</div>		
 		</div>
-		<div class="col-md-6 mb-4 annulle goa">
+		<div class="col-md-6 mb-4 annulle">
 			<div class="form-group">
 				<label for="service">Service</label>
-				<select class="custom-select form-control-border" id="service" name="service" required="">
+				<select class="custom-select form-control-border" id="service" name="service">
 					<option value="T1">CREVAISON</option>
 					<option value="T3">SURVOLTAGE</option>
 					<option value="T4">ESSENCE</option>
@@ -49,10 +49,10 @@
 				</select>
 			</div>
 		</div>
-		<div class="col-md-6 mb-4 annulle goa">
+		<div class="col-md-6 mb-4">
 			<div class="form-group">
 				<label for="enterprise">Enterprise</label>
-				<select class="custom-select form-control-border" id="enterprise" name="enterprise" required="">
+				<select class="custom-select form-control-border" id="enterprise" name="enterprise">
 					<option value="PDG">PDG</option>
 					<option value="ALLSTATE">ALLSTATE</option>
 					<option value="AXA">AXA</option>
@@ -68,7 +68,7 @@
 			<div class="form-group">
 				<label>Fête et heure de l'événement</label>
 				<div class="input-group date" id="dateTime">
-					<input type="datetime-local" name="dateTime" class="form-control" required="">
+					<input type="datetime-local" name="dateTime" class="form-control">
 				</div>
 			</div>
 		</div>	
@@ -76,7 +76,7 @@
 			<div class="form-group">
 				<label>Durée du service (min)</label>
 				<div class="input-group date" id="time_services">
-					<input type="number" name="time_services" class="form-control" min="0" required="">
+					<input type="number" name="time_services" class="form-control" min="0">
 					<div class="input-group-append ml-1" data-target="#reservationdatetime">
 						minutes
 					</div>

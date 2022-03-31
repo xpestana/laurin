@@ -20,7 +20,7 @@ use App\Http\Controllers\InvoiceController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'cors'])->group(function () {
 
     Route::get('/', function () { return Inertia::render('Home'); })->name('home'); /*HOME*/
     Route::get('/profil', function () { return Inertia::render('Profile/Show'); })->name('profile.edit'); /*PROFILE*/

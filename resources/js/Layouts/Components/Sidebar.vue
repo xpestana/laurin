@@ -56,7 +56,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <Link :href="route('history.invoices')" class="nav-link">
+      <Link :href="route('history.invoices')" :class="(route().current('history.invoices') === true)? 'active nav-link' : 'nav-link'">
         <i class="nav-icon far fa-clock"></i>
         <p>
           Historique des achats

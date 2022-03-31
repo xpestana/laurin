@@ -20,12 +20,21 @@
 					<h3 class="card-title">Sélectionnez le service et l'entreprise</h3>
 				</div>
 				<div class="card-body">
-					<form id="form-services" class="form-services needs-validation" method="POST" action="{{ route('store.invoices') }}" enctype="multipart/form-data">
-					<section id="firstStep">
-						@include('Components/First')
-					</section>
-					<section id="secondStep">
-						
+					<form id="form-services" class="form-services" method="POST" action="{{ route('store.invoices') }}" enctype="multipart/form-data">
+						@if ($errors->any())
+    					<div class="alert alert-danger">
+        				<ul>
+            			@foreach ($errors->all() as $error)
+                		<li>{{ $error }}</li>
+            			@endforeach
+        				</ul>
+    					</div>
+						@endif
+						<section id="firstStep">
+							@include('Components/First')
+						</section>
+						<section id="secondStep">
+
 							@csrf
 							<div class="row">
 								<div class="col-md-12 mb-4">
@@ -44,7 +53,7 @@
 									<div class="form-group">
 										<label>Situation actuelle</label>
 										<div class="input-group date" id="dateTime">
-											<input type="text" id="searchAddress" name='searchAddress' class="form-control"  required="">
+											<input type="text" id="searchAddress" name='searchAddress' class="form-control">
 										</div>
 										<div class="listAddress p-4"></div>
 									</div>
@@ -64,13 +73,16 @@
 						<section id="fourStep">
 							<div class="row">
 								<div class="col-md-12 ml-auto mt-3">
-									<ul>
+									<ul class="annulle goa">
 										<li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Base :</strong> <span id="base_end"></span></li>
 										<li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Destination :</strong> <span id="destination_end"></span></li>
 										<li><strong><i class=" mb-3 fas fa-wrench mr-2"></i> Service :</strong> <span id="service_end"></span></li>
 										<li><strong><i class=" mb-3 fas fa-user mr-2"></i> Nom :</strong> <span id="name_end"></span></li>
 										<li><strong><i class=" mb-3 fas fa-phone mr-2"></i> Téléphone :</strong> <span id="phone_end"></span></li>
 										<li><strong><i class=" mb-3 fas fa-envelope mr-2"></i> Courriel électronique :</strong> <span id="mail_end"></span></li>
+									</ul>
+									<ul class="show_enterprise">
+										<li><strong><i class=" mb-3 fas fa-wrench mr-2"></i> Enterprise :</strong> <span id="enterprise_data"></span></li>
 									</ul>
 								</div>
 								<div class="col-md-4">
@@ -99,67 +111,27 @@
 	</div>
 </div>
 <script>
-	(function () {
-  'use strict'
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
 
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
-	function getGeocodeData(address) { 
-		address = encodeURIComponent(address);  
-		googleMapUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="+ address +"&key=AIzaSyDsK-qVLYQGl_YSAHFQAmwxCqpCt-C0CZc";   
-		$.ajax({
-			type : "GET",
-			url : googleMapUrl,
-			success : function(geocodeResponseData){
-				console.log(geocodeResponseData.results);
-				if(geocodeResponseData.results.length > 0){
-					$('.listAddress').show();
-					geocodeResponseData.results.forEach( function(valor, indice, array) {
-						$('.listAddress').append('<div class="list py-1" onclick="geometry('+valor.geometry.location.lat +','+valor.geometry.location.lng +','+"'"+valor.formatted_address+"'"+')">'+valor.formatted_address+'</div>')
-    				console.log(valor.geometry.location);
-					});
-				}else{
-					$('.listAddress').hide();
-				}
+	/*********************** GOOGLE MAPS **********************************************************/
+function getGeocodeData(address) { 
+	address = encodeURIComponent(address);  
+	googleMapUrl = "https://maps.googleapis.com/maps/api/geocode/json?address="+ address +"&key=AIzaSyDsK-qVLYQGl_YSAHFQAmwxCqpCt-C0CZc";   
+	$.ajax({
+		type : "GET",
+		url : googleMapUrl,
+		success : function(geocodeResponseData){
+			if(geocodeResponseData.results.length > 0){
+				$('.listAddress').show();
+				geocodeResponseData.results.forEach( function(valor, indice, array) {
+					$('.listAddress').append('<div class="list py-1" onclick="geometry('+valor.geometry.location.lat +','+valor.geometry.location.lng +','+"'"+valor.formatted_address+"'"+')">'+valor.formatted_address+'</div>')
+				});
+			}else{
+				$('.listAddress').hide();
 			}
-		});
-    	//geocodeResponseData = file_get_contents(googleMapUrl);
-    	//$responseData = json_decode($geocodeResponseData, true);console.log($responseData);
-    /*	if($responseData['status']=='OK') {
-    		$latitude = isset($responseData['results'][0]['geometry']['location']['lat']) ? $responseData['results'][0]['geometry']['location']['lat'] : "";
-    		$longitude = isset($responseData['results'][0]['geometry']['location']['lng']) ? $responseData['results'][0]['geometry']['location']['lng'] : "";
-    		$formattedAddress = isset($responseData['results'][0]['formatted_address']) ? $responseData['results'][0]['formatted_address'] : "";         
-    		if($latitude && $longitude && $formattedAddress) {         
-    			$geocodeData = array();                         
-    			array_push(
-    				$geocodeData, 
-    				$latitude, 
-    				$longitude, 
-    				$formattedAddress
-    				);            
-    			return $geocodeData;             
-    		} else {
-    			return false;
-    		}         
-    	} else {
-    		echo "ERROR: {$responseData['status']}";
-    		return false;
-    	}*/
-    }
+		}
+	});
+}
 
       // Initialize and add the map
       function initMap() {
@@ -216,12 +188,11 @@
         		$latitude = $geocodeData[0];
         		$longitude = $geocodeData[1];
         		$address = $geocodeData[2];
-        		console.log($geocodeData);
         	}
         });
       };
 
-
+/******************************* END GOOGLE MAPS ***************************************/
       $('#secondStep').hide();
       $('#thirdStep').hide();
       $('#fourStep').hide();
@@ -230,8 +201,14 @@
       /**/
 
       function OneNext() {
-      	$('#firstStep').hide();
-      	$('#secondStep').show();
+      	if($('input.cancelled').prop('checked') || $('input.goa').prop('checked')){
+      		$('#firstStep').hide();
+      		$('#fourStep').show();
+	      	coupler();
+      	}else{
+      		$('#firstStep').hide();
+      		$('#secondStep').show();
+      	}
       }
       function SecondNext() {
       	$('#secondStep').hide();
@@ -248,14 +225,17 @@
       function ThirdNext(){
       	$('#thirdStep').hide();
       	$('#fourStep').show();
-
       	coupler();
       }
       function FourPrev(){
+      	if($('input.cancelled').prop('checked') || $('input.goa').prop('checked')){
+      		$('#firstStep').show();
+      		$('#fourStep').hide();
+      	}else{
       	$('#fourStep').hide();
       	$('#thirdStep').show();
+      	}
       }
-
       function coupler(){
       	var base = $('select[name="enterprise_own"] option:selected').text();
       	var destination = $('#searchAddress').val();
@@ -263,6 +243,7 @@
       	var name = $('#name_client').val();
       	var email = $('#email_client').val();
       	var phone = $('#phone_client').val();
+      	var enterprise = $('#enterprise').val();
 
       	$('#base_end').html(base);
       	$('#destination_end').html(destination);
@@ -270,6 +251,7 @@
       	$('#name_end').html(name);
       	$('#mail_end').html(email);
       	$('#phone_end').html(phone);
+      	$('#enterprise_data').html(enterprise);
 
       	/*   Img   */
       	const $seleccionArchivos = document.querySelector("#file_end"),
@@ -279,7 +261,7 @@
 	  		const archivos = $seleccionArchivos.files;
   			// Si no hay archivos salimos de la función y quitamos la imagen
   			if (!archivos || !archivos.length) {
-  			$imagenPrevisualizacion.src = "";
+  				$imagenPrevisualizacion.src = "";
   				return;
   			}
   			// Ahora tomamos el primer archivo, el cual vamos a previsualizar
@@ -288,12 +270,12 @@
   			const objectURL = URL.createObjectURL(primerArchivo);
   			// Y a la fuente de la imagen le ponemos el objectURL
   			$imagenPrevisualizacion.src = objectURL;
-		}
-		function geometry(lat,long,address) {
-			$('.listAddress').hide();
-			$('#searchAddress').val(address);
-			$('#lat_input').val(lat);
-			$('#lng_input').val(long);
-		}
-</script>
-@endsection
+  		}
+  		function geometry(lat,long,address) {
+  			$('.listAddress').hide();
+  			$('#searchAddress').val(address);
+  			$('#lat_input').val(lat);
+  			$('#lng_input').val(long);
+  		}
+  	</script>
+  	@endsection

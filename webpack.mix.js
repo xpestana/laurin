@@ -32,6 +32,7 @@ mix
         'resources/plugins/daterangepicker/daterangepicker.css',
         'resources/plugins/summernote/summernote-bs4.min.css',
         'resources/css/app.css',
+        'resources/css/custom.css',
         ], 'public/css/all.css')
     .webpackConfig(require('./webpack.config'));
 
