@@ -43,7 +43,10 @@
                             </template>
                           </li>
                           <li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Destination:</strong> 
-                            {{ service.destination }} ( {{ service.km }} )
+                            {{ service.destination }}
+                          </li>
+                          <li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Km:</strong> 
+                            {{ service.km }} Km
                           </li>
                           <li><strong><i class="mb-3 fas fa-fire mr-2"></i> Flair:</strong> 
                             {{ service.flair }}
@@ -160,7 +163,7 @@
             }
 
           }
-
+          console.log("col",col);
           /**** FLAIR Y ESSENCE ****/
           if (col.flair > 0) {
             amount_col = amount_col + (col.flair * 20);
@@ -171,6 +174,7 @@
           
           return {
             id : col.id,
+            km: col.km,
             annuled : col.annuled,
             goa    : col.goa,
             enterprise: col.enterprise,
@@ -192,7 +196,6 @@
     },
     created(){
       this.moment=Moment;
-      console.log(this.services);
     },
     methods: {
       delete_user(id){
