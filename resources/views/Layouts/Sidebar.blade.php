@@ -53,6 +53,7 @@
         </p>
       </a>
     </li>
+    @role('Admin')
     <li class="nav-item">
       <a href="{{ route('history.invoices') }}" class="nav-link">
         <i class="nav-icon far fa-clock"></i>
@@ -61,6 +62,7 @@
         </p>
       </a>
     </li>
+    @endrole
     <li class="nav-item">
       <a href="{{ route('logout') }}" class="nav-link"onclick="event.preventDefault();document.getElementById('logout-form').submit();">
         <i class="nav-icon fas fa-sign-out-alt"></i>

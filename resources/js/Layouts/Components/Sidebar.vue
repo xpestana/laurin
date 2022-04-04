@@ -55,7 +55,8 @@
         </p>
       </a>
     </li>
-    <li class="nav-item">
+    
+    <li class="nav-item" v-if="$page.props.auth.role == 'Admin'">
       <Link :href="route('history.invoices')" :class="(route().current('history.invoices') === true)? 'active nav-link' : 'nav-link'">
         <i class="nav-icon far fa-clock"></i>
         <p>
@@ -63,6 +64,7 @@
         </p>
       </Link>
     </li>
+    
     <li class="nav-item">
       <a href="javascript:void(0)" class="nav-link" @click.prevent="logout">
         <i class="nav-icon fas fa-sign-out-alt"></i>

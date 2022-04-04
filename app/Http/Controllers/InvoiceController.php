@@ -65,6 +65,7 @@ class InvoiceController extends Controller
                 'file'              => 'nullable|image|mimes:jpg,jpeg,png,gif,svg',
             ]);
 
+            $km=null;
 
             /*** Direcciones ***/
             if ($request->enterprise_own == "1") {
@@ -132,22 +133,19 @@ class InvoiceController extends Controller
                 'file' => $name_image,
                 'flair' => $request->flair,
                 'essence' => $request->essence,
-                'km' => $km,
+                'km' => (isset($km)) ? $km : 0,
             ]);    
         }  catch (Exception $e) {
             dd($e->getMessage());
         }
         
 
-       return Redirect::route('history.invoices')->with(['id'=>$service->id, 'message' => 'Inscription réussie', 'code' => 200, 'status' => 'success']);  
+       return Redirect::route('home')->with(['id'=>$service->id, 'message' => 'Inscription réussie', 'code' => 200, 'status' => 'success']);  
     }
     public function history()
     {   
         if (auth()->user()->getRoleNames()->first() == 'Driver') {
-            $services = Service::where("user_id",auth()->user()->id)->paginate(10);
-            $services->load('user.profile');
-
-            return Inertia::render('Profile/History', compact('services'));
+           return Redirect::route('home')->with(['id'=>400, 'message' => 'Error', 'code' => 400, 'status' => 'error']);  
         }else{
             $services = Service::with('user.profile')->paginate(10);
 
