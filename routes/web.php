@@ -43,4 +43,6 @@ Route::middleware(['auth', 'verified', 'role:Admin'])->prefix('tablero')->group(
     Route::get('/conducteurs/edit/{id}', [AdminController::class, 'edit_driver'])->name('edit.driver');/*STORE DRIVERS*/
     Route::put('/conducteurs/edit/{id}', [AdminController::class, 'update_driver'])->name('update.driver');/*STORE DRIVERS*/
     Route::delete('/conducteurs/delete', [AdminController::class, 'delete_driver'])->name('delete.driver');/*DELETE DRIVERS*/
+
+    Route::get('/facture/{invoice}', [InvoiceController::class, 'print_facture'])->name('print.facture');/*DELETE DRIVERS*/
 });

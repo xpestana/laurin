@@ -81,5 +81,4 @@ class AdminController extends Controller
 
         return Redirect::route('conducteurs')->with(['id'=>$user->id, 'message' => 'Enregistré avec succès', 'code' => 200, 'status' => 'success']);  
     }
-
 }

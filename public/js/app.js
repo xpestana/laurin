@@ -21268,6 +21268,7 @@ __webpack_require__.r(__webpack_exports__);
         /**** DISTANCIAS ****/
         var amount_col = 0;
         var feriado = 0;
+        var nocturno = 0;
 
         if (col.date_Time != null) {
           /*feriados*/
@@ -21279,12 +21280,14 @@ __webpack_require__.r(__webpack_exports__);
           /*Nocturnos*/
 
 
-          var hour = _this.moment(col.date_Time).format("h:mm:ss a");
+          var hour = _this.moment(col.date_Time).format("H");
 
-          console.log(hour);
+          if (hour >= "19" && hour <= "23") {
+            nocturno = 1;
+          }
 
-          if (date == "01-01" || date == "07-01" || date == "12-25" || date == "06-24") {
-            feriado = 1;
+          if (hour >= "0" && hour <= "5") {
+            nocturno = 1;
           }
         }
         /**** VALIDACIONES ANULADO *****/
@@ -21304,12 +21307,22 @@ __webpack_require__.r(__webpack_exports__);
 
         if (col.annuled == false && col.goa == false) {
           if (col.service == 'T1' || col.service == 'T2' || col.service == 'T3' || col.service == 'T4' || col.service == 'T7') {
-            amount_col = _this.firstT(col, feriado);
+            amount_col = _this.firstT(col, feriado, nocturno);
           } else if (col.service == 'T5' || col.service == 'T6') {
-            amount_col = _this.secondT(col, feriado);
+            amount_col = _this.secondT(col, feriado, nocturno);
           } else if (col.service == 'T8') {
-            amount_col = _this.thirdT(col, feriado);
+            amount_col = _this.thirdT(col, feriado, nocturno);
           }
+        }
+        /**** FLAIR Y ESSENCE ****/
+
+
+        if (col.flair > 0) {
+          amount_col = amount_col + col.flair * 20;
+        }
+
+        if (col.essence > 0) {
+          amount_col = amount_col + col.essence;
         }
 
         return {
@@ -21406,15 +21419,24 @@ __webpack_require__.r(__webpack_exports__);
 
       return amount_col;
     },
-    firstT: function firstT(col, feriado) {
+    firstT: function firstT(col, feriado, nocturno) {
       var amount_col = 0;
       var km = 0;
       var Tkmxh = 0;
+      var timeXtra = col.timeservices - 30;
 
       if (col.enterprise == "PDG") {
         km = col.km - 5;
         Tkmxh = 2.75 * km;
         amount_col = 48 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.25;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 20;
@@ -21426,6 +21448,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2 * km;
         amount_col = 45 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21435,6 +21465,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 3 * km;
         amount_col = 60 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.67;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 20;
@@ -21446,6 +21484,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2.75 * km;
         amount_col = 50 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.25;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21455,6 +21501,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 3 * km;
         amount_col = 60 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 12;
@@ -21466,6 +21520,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2.5 * km;
         amount_col = 52.5 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21475,6 +21537,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 2.5 * km;
         amount_col = 40 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 12;
@@ -21486,6 +21556,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 3 * km;
         amount_col = 50 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.67;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 20;
         }
@@ -21493,15 +21571,24 @@ __webpack_require__.r(__webpack_exports__);
 
       return amount_col;
     },
-    secondT: function secondT(col, feriado) {
+    secondT: function secondT(col, feriado, nocturno) {
       var amount_col = 0;
       var km = 0;
       var Tkmxh = 0;
+      var timeXtra = col.timeservices - 30;
 
       if (col.enterprise == "PDG") {
         km = col.km - 5;
         Tkmxh = 2.75 * km;
         amount_col = 60 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.25;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 20;
@@ -21513,6 +21600,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2 * km;
         amount_col = 55 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21522,6 +21617,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 3 * km;
         amount_col = 70 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.67;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 20;
@@ -21533,6 +21636,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2.75 * km;
         amount_col = 60 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.25;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21542,6 +21653,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 3 * km;
         amount_col = 70 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 12;
@@ -21553,6 +21672,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2.5 * km;
         amount_col = 87 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21562,6 +21689,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 2.5 * km;
         amount_col = 70 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 12;
@@ -21573,6 +21708,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 3 * km;
         amount_col = 80 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.67;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 20;
         }
@@ -21580,15 +21723,24 @@ __webpack_require__.r(__webpack_exports__);
 
       return amount_col;
     },
-    thirdT: function thirdT(col, feriado) {
+    thirdT: function thirdT(col, feriado, nocturno) {
       var amount_col = 0;
       var km = 0;
       var Tkmxh = 0;
+      var timeXtra = col.timeservices - 30;
 
       if (col.enterprise == "PDG") {
         km = col.km - 5;
         Tkmxh = 2.75 * km;
         amount_col = 80 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.25;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 20;
@@ -21600,6 +21752,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2 * km;
         amount_col = 80 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21609,6 +21769,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 3 * km;
         amount_col = 80 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.67;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 20;
@@ -21620,6 +21788,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2.75 * km;
         amount_col = 80 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.25;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21629,6 +21805,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 3 * km;
         amount_col = 80 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 12;
@@ -21640,6 +21824,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2.5 * km;
         amount_col = 102 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21650,6 +21842,14 @@ __webpack_require__.r(__webpack_exports__);
         Tkmxh = 2.5 * km;
         amount_col = 80 + Tkmxh;
 
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.17;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 12;
+        }
+
         if (feriado == 1) {
           amount_col = amount_col + 12;
         }
@@ -21659,6 +21859,14 @@ __webpack_require__.r(__webpack_exports__);
         km = col.km - 5;
         Tkmxh = 3 * km;
         amount_col = 80 + Tkmxh;
+
+        if (timeXtra > 0) {
+          amount_col = amount_col + timeXtra * 1.67;
+        }
+
+        if (nocturno == 1) {
+          amount_col = amount_col + 20;
+        }
 
         if (feriado == 1) {
           amount_col = amount_col + 20;
@@ -26455,15 +26663,26 @@ var _hoisted_40 = {
   "class": "col-5 mt-4"
 };
 var _hoisted_41 = ["src"];
-var _hoisted_42 = {
-  key: 1
-};
+var _hoisted_42 = ["href"];
 
-var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "Rien à montrer", -1
+var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Télécharger la facture ");
+
+var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fas fa-arrow-alt-circle-down"
+}, null, -1
 /* HOISTED */
 );
 
-var _hoisted_44 = [_hoisted_43];
+var _hoisted_45 = [_hoisted_43, _hoisted_44];
+var _hoisted_46 = {
+  key: 1
+};
+
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "Rien à montrer", -1
+/* HOISTED */
+);
+
+var _hoisted_48 = [_hoisted_47];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Sidebar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Sidebar");
 
@@ -26562,12 +26781,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* PROPS */
     , _hoisted_41)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
     /* STABLE_FRAGMENT */
-    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])], 8
+    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+      href: _ctx.route('print.facture', {
+        invoice: service.id
+      }),
+      target: "_blank"
+    }, _hoisted_45, 8
+    /* PROPS */
+    , _hoisted_42)])])])], 8
     /* PROPS */
     , _hoisted_18)]);
   }), 128
   /* KEYED_FRAGMENT */
-  ))])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_42, _hoisted_44))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /.card-body ")])])])])])], 64
+  ))])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_46, _hoisted_48))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /.card-body ")])])])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

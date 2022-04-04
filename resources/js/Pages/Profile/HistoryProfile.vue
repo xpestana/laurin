@@ -68,7 +68,7 @@
                             <img style="width: 100%" :src="'/storage/img'+service.file">
                           </li>
                         </template>
-
+                        <li><a :href="route('print.facture', { invoice:service.id })" target="_blank"> Télécharger la facture <i class="fas fa-arrow-alt-circle-down"></i></a></li>
                       </ul>
                     </div>
                   </div>
@@ -114,6 +114,8 @@
           /**** DISTANCIAS ****/
           var amount_col = 0;
           var feriado = 0;
+          var nocturno = 0;
+
           if (col.date_Time != null) {
             /*feriados*/
             var date = this.moment(col.date_Time).format("MM-DD");  
@@ -121,9 +123,12 @@
               feriado = 1;
             }
             /*Nocturnos*/
-            var hour = this.moment(col.date_Time).format("h:mm:ss a");  console.log(hour);
-            if (date == "01-01" || date == "07-01"  || date == "12-25"  || date == "06-24" ) {
-              feriado = 1;
+            var hour = this.moment(col.date_Time).format("H");
+            if (hour >= "19" && hour <= "23") {
+              nocturno = 1;
+            }
+            if (hour >= "0" && hour <= "5") {
+              nocturno = 1;
             }
           }
           /**** VALIDACIONES ANULADO *****/
@@ -138,14 +143,23 @@
           if(col.annuled == false && col.goa == false){
 
             if (col.service == 'T1' || col.service == 'T2' || col.service == 'T3' || col.service == 'T4' || col.service == 'T7') {
-              amount_col = this.firstT(col, feriado);
+              amount_col = this.firstT(col, feriado, nocturno);
             }else if (col.service == 'T5' || col.service == 'T6') {
-              amount_col = this.secondT(col, feriado);
+              amount_col = this.secondT(col, feriado, nocturno);
             }else if (col.service == 'T8') {
-              amount_col = this.thirdT(col, feriado);
+              amount_col = this.thirdT(col, feriado, nocturno);
             }
 
           }
+
+          /**** FLAIR Y ESSENCE ****/
+          if (col.flair > 0) {
+            amount_col = amount_col + (col.flair * 20);
+          }
+          if (col.essence > 0) {
+            amount_col = amount_col + col.essence;
+          }
+          
           return {
             id : col.id,
             annuled : col.annuled,
@@ -229,16 +243,24 @@
 
           return amount_col;
       },
-      firstT(col, feriado){
+      firstT(col, feriado, nocturno){
 
         var amount_col = 0;
         var km = 0;
         var Tkmxh = 0;
+        var timeXtra = col.timeservices-30;
 
           if (col.enterprise == "PDG") {
               km = col.km - 5;
               Tkmxh = 2.75 * km;
               amount_col = 48 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.25);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -247,6 +269,13 @@
               km = col.km - 10;
               Tkmxh = 2 * km;
               amount_col = 45 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -255,6 +284,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 60 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.67);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -263,6 +299,13 @@
               km = col.km - 5;
               Tkmxh = 2.75 * km;
               amount_col = 50 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.25);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -271,6 +314,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 60 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -279,6 +329,13 @@
               km = col.km - 10;
               Tkmxh = 2.5 * km;
               amount_col = 52.5 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -287,6 +344,13 @@
               km = col.km - 5;
               Tkmxh = 2.5 * km;
               amount_col = 40 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -295,6 +359,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 50 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.67);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -302,16 +373,24 @@
 
           return amount_col;
       },
-      secondT(col, feriado){
+      secondT(col, feriado, nocturno){
 
         var amount_col = 0;
         var km = 0;
         var Tkmxh = 0;
+        var timeXtra = col.timeservices-30;
 
           if (col.enterprise == "PDG") {
               km = col.km - 5;
               Tkmxh = 2.75 * km;
               amount_col = 60 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.25);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -320,6 +399,13 @@
               km = col.km - 10;
               Tkmxh = 2 * km;
               amount_col = 55 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -328,6 +414,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 70 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.67);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -336,6 +429,13 @@
               km = col.km - 5;
               Tkmxh = 2.75 * km;
               amount_col = 60 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.25);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -344,6 +444,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 70 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -352,6 +459,13 @@
               km = col.km - 10;
               Tkmxh = 2.5 * km;
               amount_col = 87 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -360,6 +474,13 @@
               km = col.km - 5;
               Tkmxh = 2.5 * km;
               amount_col = 70 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -368,6 +489,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.67);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -375,16 +503,24 @@
 
           return amount_col;
       },
-      thirdT(col, feriado){
+      thirdT(col, feriado, nocturno){
 
         var amount_col = 0;
         var km = 0;
         var Tkmxh = 0;
+        var timeXtra = col.timeservices-30;
 
           if (col.enterprise == "PDG") {
               km = col.km - 5;
               Tkmxh = 2.75 * km;
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.25);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -393,6 +529,13 @@
               km = col.km - 10;
               Tkmxh = 2 * km;
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -401,6 +544,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.67);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
@@ -409,6 +559,13 @@
               km = col.km - 5;
               Tkmxh = 2.75 * km;
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.25);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -417,6 +574,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;            
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -425,6 +589,13 @@
               km = col.km - 10;
               Tkmxh = 2.5 * km;
               amount_col = 102 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -433,6 +604,13 @@
               km = col.km - 5;
               Tkmxh = 2.5 * km;
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.17);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 12;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 12;
               }
@@ -441,6 +619,13 @@
               km = col.km - 5;
               Tkmxh = 3 * km;
               amount_col = 80 + Tkmxh;
+
+              if (timeXtra > 0) {
+                amount_col = amount_col + (timeXtra * 1.67);
+              }
+              if (nocturno == 1) {
+                amount_col = amount_col + 20;
+              }
               if (feriado == 1) {
                 amount_col = amount_col + 20;
               }
