@@ -10,7 +10,8 @@
           <div class="card-body">
             <div class="card-body">
               <!-- we are adding the accordion ID so Bootstrap's collapse plugin detects it -->
-              <div id="accordion" v-if="services.length != 0">
+              <template v-if="services.data.length != 0">
+              <div id="accordion">
                 <div v-for="service in servicios" :key="service.id" class="card card-primary">
                   <div class="card-header">
                     <h4 class="card-title w-100">
@@ -74,9 +75,17 @@
                   </div>
                 </div>
               </div>
-              <div v-else>
-                <h5>Rien à montrer</h5>
+              <div class="row justify-content-center">
+                <div class="col-md-6">
+                  <paginator :paginator="services"/>
+                </div>
               </div>
+              </template>
+              <template  v-else>
+                <div>
+                <h5>Rien à montrer</h5>
+              </div>  
+              </template>
             </div>
             <!-- /.card-body -->
           </div>
@@ -183,6 +192,7 @@
     },
     created(){
       this.moment=Moment;
+      console.log(this.services);
     },
     methods: {
       delete_user(id){
