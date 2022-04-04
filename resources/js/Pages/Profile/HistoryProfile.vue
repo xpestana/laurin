@@ -43,7 +43,7 @@
                             </template>
                           </li>
                           <li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Destination:</strong> 
-                            {{ service.destination }}
+                            {{ service.destination }} ({{ service.km }})
                           </li>
                           <li><strong><i class="mb-3 fas fa-fire mr-2"></i> Flair:</strong> 
                             {{ service.flair }}
