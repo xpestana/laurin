@@ -859,7 +859,7 @@ class InvoiceController extends Controller
 
         }
             $filename = 'Factura_'.str_pad($service->id, 5, "0", STR_PAD_LEFT).'.pdf';
-            $this->fpdf->output($filename,"I");
+            $this->fpdf->output($filename,"D");
 
         exit;
     }
