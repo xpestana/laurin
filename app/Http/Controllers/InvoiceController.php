@@ -61,7 +61,7 @@ class InvoiceController extends Controller
                 'searchAddress'     => 'required|string',
                 'name'              => 'required|string',
                 'phone'             => 'required|string',
-                'email'             => 'required|string',
+                'email'             => 'nullable|email',
                 'file'              => 'nullable|image|mimes:jpg,jpeg,png,gif,svg',
             ]);
 
@@ -725,7 +725,7 @@ class InvoiceController extends Controller
     {
         $service = Service::find($invoice);
         $feriado = $nocturno = 0;
-
+        $sub_amount_col = 0;
         
             
         $this->fpdf->AddPage("L", ['200', '180']);
@@ -740,11 +740,18 @@ class InvoiceController extends Controller
         $this->fpdf->setX(10);
         $this->fpdf->Cell(90,10,utf8_decode("Facture N°: "). str_pad($service->id, 5, "0", STR_PAD_LEFT),1,0,'L');
         if($service->annuled){
+            $amount_col  = $this->annuled($service);
+            $sub_amount_col = $amount_col;
+            $amount_col = $amount_col + ($amount_col *0.05);
+            $amount_col = $amount_col + ($amount_col *0.09975);
             $this->fpdf->Cell(90,10,utf8_decode("Service annulé"),1,0,'L');
             $this->fpdf->Ln();$this->fpdf->Ln();
             $this->fpdf->SetFont('Arial', 'B', 15);
+            $this->fpdf->Cell(90,8,utf8_decode("Sub-Total"),1,0,'L');
+            $this->fpdf->Cell(90,8,number_format($sub_amount_col, 2, '.', '')." $",1,0,'L');
+            $this->fpdf->Ln();
             $this->fpdf->Cell(90,10,utf8_decode("Total"),1,0,'L');
-            $this->fpdf->Cell(90,10,$this->annuled($service)." $",1,0,'L');
+            $this->fpdf->Cell(90,10,number_format($amount_col, 2, '.', '')." $",1,0,'L');
         }
         if($service->goa){
             if ($service->enterprise == "URGENTLY") {
@@ -775,14 +782,22 @@ class InvoiceController extends Controller
             }else{
                 $opc = null;
             }
+            $amount_col = $this->goa($service);
+            $sub_amount_col = $amount_col;
+            $amount_col = $amount_col + ($amount_col *0.05);
+            $amount_col = $amount_col + ($amount_col *0.09975);
+
             $this->fpdf->Cell(90,10,utf8_decode("Service GOA"),1,0,'L');
             $this->fpdf->Ln();
             $this->fpdf->SetFont('Arial', 'B', 12);
             $this->fpdf->Cell(90,8,utf8_decode("Enterprise"),1,0,'L');
             $this->fpdf->Cell(90,8,utf8_decode($service->enterprise).($opc),1,0,'L');
             $this->fpdf->Ln();
+            $this->fpdf->Cell(90,8,utf8_decode("Sub-Total"),1,0,'L');
+            $this->fpdf->Cell(90,8,number_format($sub_amount_col, 2, '.', '')." $",1,0,'L');
+            $this->fpdf->Ln();
             $this->fpdf->Cell(90,8,utf8_decode("Total"),1,0,'L');
-            $this->fpdf->Cell(90,8,$this->goa($service)." $",1,0,'L');
+            $this->fpdf->Cell(90,8,number_format($amount_col, 2, '.', '')." $",1,0,'L');
         }
         if($service->goa == false && $service->annuled == false){
             if ($service->date_Time != null) {
@@ -824,6 +839,11 @@ class InvoiceController extends Controller
             if ($service->essence > 0) {
                 $amount_col = $amount_col + $service->essence;
             }
+
+            $sub_amount_col = $amount_col;
+            $amount_col = $amount_col + ($amount_col *0.05);
+            $amount_col = $amount_col + ($amount_col *0.09975);
+
             $this->fpdf->Ln();
             $this->fpdf->Cell(90,8,utf8_decode("Flair"),1,0,'L');
             $this->fpdf->Cell(90,8,($service->flair > 0) ? ($service->flair * 20)." $" : '0 $',1,0,'L');
@@ -831,12 +851,15 @@ class InvoiceController extends Controller
             $this->fpdf->Cell(90,8,utf8_decode("Essence"),1,0,'L');
             $this->fpdf->Cell(90,8,($service->flair > 0) ? $service->essence." $" : '0 $',1,0,'L');
             $this->fpdf->Ln();
+            $this->fpdf->Cell(90,8,utf8_decode("Sub-Total"),1,0,'L');
+            $this->fpdf->Cell(90,8,number_format($sub_amount_col, 2, '.', '')." $",1,0,'L');
+            $this->fpdf->Ln();
             $this->fpdf->Cell(90,8,utf8_decode("Total"),1,0,'L');
-            $this->fpdf->Cell(90,8,$amount_col." $",1,0,'L');
+            $this->fpdf->Cell(90,8,number_format($amount_col, 2, '.', '')." $",1,0,'L');
 
         }
             $filename = 'Factura_'.str_pad($service->id, 5, "0", STR_PAD_LEFT).'.pdf';
-            $this->fpdf->output($filename,"D");
+            $this->fpdf->output($filename,"I");
 
         exit;
     }

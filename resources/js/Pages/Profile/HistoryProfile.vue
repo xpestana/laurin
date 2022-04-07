@@ -23,6 +23,8 @@
                             <template v-if="service.goa == true">Service GOA</template>
                           </div>
                           <div class="col-md-3">
+                            <span><strong>Sub-Total</strong> {{ service.sub_amount }} $</span>    
+                            <br>
                             <span><strong>Total</strong> {{ service.amount }} $</span>    
                           </div>
                         </div>
@@ -32,6 +34,7 @@
                   <div :id="'collapse'+service.id" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                       <ul>
+                        <li><strong><i class="fas fa-user mb-3 mr-2"></i> Patrouilleur :</strong> {{ service.driver }}</li>
                         <li><strong><i class=" mb-3 fas fa-wrench mr-2"></i> Enterprise :</strong> {{ service.enterprise }}</li>
                         <template v-if="service.annuled == false && service.goa == false">
                           <li><strong><i class=" mb-3 fas fa-map-marker-alt mr-2"></i> Base :</strong> 
@@ -123,8 +126,10 @@
     computed:{
       servicios(){
         const obj = this.services.data.map((col)=>{
+
           /**** DISTANCIAS ****/
           var amount_col = 0;
+          var sub_amount_col = 0;
           var feriado = 0;
           var nocturno = 0;
 
@@ -163,7 +168,6 @@
             }
 
           }
-          console.log("col",col);
           /**** FLAIR Y ESSENCE ****/
           if (col.flair > 0) {
             amount_col = amount_col + (col.flair * 20);
@@ -171,9 +175,15 @@
           if (col.essence > 0) {
             amount_col = amount_col + col.essence;
           }
-          
+          /******* IMPUESTOS  *******/
+
+          sub_amount_col = amount_col;
+          amount_col = amount_col + (amount_col *0.05);
+          amount_col = amount_col + (amount_col *0.09975);
+
           return {
             id : col.id,
+            driver: col.user.profile.firstname+" "+ col.user.profile.lastname,
             km: col.km,
             annuled : col.annuled,
             goa    : col.goa,
@@ -187,7 +197,8 @@
             phone: col.phone,
             email: col.email,
             file: col.file,
-            amount: amount_col,
+            sub_amount: sub_amount_col.toFixed(2),
+            amount: amount_col.toFixed(2),
           }
         });
         return obj;
